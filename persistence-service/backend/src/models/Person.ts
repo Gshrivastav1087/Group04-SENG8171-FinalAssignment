@@ -7,13 +7,13 @@ import { PersonAward } from './PersonAward';
 @Entity('person')
 export class Person {
   @PrimaryGeneratedColumn()
-  person_id: number;
+  union_id: number;
 
   @Column()
   full_name: string;
 
   @Column({ type: 'date' })
-  date_of_birth: string;
+  date_of_birth: Date;
 
   @Column({ type: 'text' })
   biography: string;

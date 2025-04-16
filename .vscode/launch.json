@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "pwa-node",
+        "request": "launch",
+        "name": "Debug PostgreSQL Strategy",
+        "skipFiles": ["<node_internals>/**"],
+        "program": "${workspaceFolder}/persistence-service/backend/src/strategy/postgresql/index.ts",
+        "runtimeArgs": ["-r", "ts-node/register"],
+        "cwd": "${workspaceFolder}/persistence-service/backend",
+        "env": {
+          "TS_NODE_PROJECT": "${workspaceFolder}/persistence-service/backend/tsconfig.json"
+        },
+        "outFiles": ["${workspaceFolder}/**/*.js"]
+      },
+      {
+        "name": "Debug Jest Tests",
+        "type": "node",
+        "request": "launch",
+        "runtimeArgs": [
+          "--require",
+          "ts-node/register",
+          "${workspaceFolder}/persistence-service/backend/node_modules/jest/bin/jest.js"
+        ],
+        "args": ["--runInBand"],
+        "cwd": "${workspaceFolder}/persistence-service/backend",
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+      }
+    ]
+  }
+  

@@ -5,7 +5,7 @@ import { Movie } from './Movie';
 @Entity('movieaward')
 export class MovieAward {
   @PrimaryGeneratedColumn()
-  movieaward_id: number;
+  id: number;
 
   @ManyToOne(() => Movie, movie => movie.movieAwards)
   movie: Movie;

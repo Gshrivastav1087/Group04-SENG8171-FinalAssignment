@@ -11,7 +11,7 @@ export class Movie {
   title: string;
 
   @Column({ type: 'date' })
-  release_date: string;
+  release_date: Date;
 
   @Column({ type: 'text' })
   description: string;

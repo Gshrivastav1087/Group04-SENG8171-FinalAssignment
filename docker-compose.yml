@@ -1,0 +1,89 @@
+version: "3.7"
+
+services:
+  # Reverse Proxy (Nginx)
+  reverse-proxy:
+    image: nginx:stable-alpine
+    volumes:
+      - ./config/nginx/:/etc/nginx/conf.d/
+    ports:
+      - 8081:80  # Expose the reverse proxy on port 8081
+    depends_on:
+      - backend
+    networks:
+      web-services:
+        aliases:
+          - backend.${BACKEND_DOMAIN:-127-0-0-1.sslip.io}
+
+  # PostgreSQL Database
+  db:
+    image: postgres:latest
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    networks:
+      - web-services
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # PgAdmin (For database management UI)
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'postgres@example.com'
+      PGADMIN_DEFAULT_PASSWORD: 'password'
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - web-services
+
+  # Backend Service
+  backend:
+    build: ./persistence-service/backend
+    restart: always
+    environment:
+      IS_PROD: "true"
+      DB_HOST: db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - web-services
+    ports:
+      - 8000:8000
+
+  # Integration Test Service (Running tests)
+  test:
+    container_name: persistence-service-test
+    build:
+      context: ./integration-tests  # Path to your integration tests folder
+      dockerfile: test-setup.Dockerfile
+    command: ["./scripts/run-all-tests.sh", "reverse-proxy", ""]  # Custom command to run the tests
+    environment:
+      TARGET_URL: "http://reverse-proxy"  # URL to the reverse-proxy for integration tests
+    volumes:
+      - ./integration-tests/results/:/results/  # Mounting result directory for test output
+    depends_on:
+      - reverse-proxy  # Ensure reverse-proxy is up before running tests
+      - backend        # Ensure backend service is also available for integration tests
+    networks:
+      - web-services
+
+networks:
+  web-services:
+    driver: bridge
+
+volumes:
+  postgres-data:
