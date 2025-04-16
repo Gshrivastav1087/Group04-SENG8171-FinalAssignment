@@ -1,4 +1,3 @@
-// src/services/personService.ts
 import { AppDataSource } from '../config/configure';
 import { Contact } from '../models/Contact';
 import { Contract } from '../models/Contract';
@@ -22,12 +21,14 @@ export class PersonService {
       address: string;
     };
   }): Promise<Person> {
-    const nationality = await this.nationalityRepo.findOne({ where: { nationality_id: data.nationality_id } });
+    const nationality = await this.nationalityRepo.findOne({
+      where: { nationality_id: data.nationality_id }
+    });
     if (!nationality) throw new Error("Nationality not found");
 
     const person = this.personRepo.create({
       full_name: data.full_name,
-      date_of_birth: data.date_of_birth,
+      date_of_birth: new Date(data.date_of_birth),
       biography: data.biography,
       nationality
     });
@@ -47,11 +48,13 @@ export class PersonService {
     movie_id: number;
     salary: number;
   }): Promise<Contract> {
-    const person = await this.personRepo.findOne({ where: { person_id: data.person_id } });
+    const person = await this.personRepo.findOne({
+      where: { union_id: data.person_id }
+    });
     if (!person) throw new Error("Person not found");
 
     const contract = this.contractRepo.create({
-      person: { person_id: data.person_id },
+      person: { union_id: data.person_id },
       movie: { movie_id: data.movie_id },
       salary: data.salary
     });
@@ -61,8 +64,8 @@ export class PersonService {
 
   async getPersonWithContracts(person_id: number): Promise<Person | null> {
     return await this.personRepo.findOne({
-      where: { person_id },
-      relations: ["contracts", "contacts", "nationality"]
+      where: { union_id: person_id },
+      relations: ['contracts', 'contacts', 'nationality', 'personAwards']
     });
   }
 }
