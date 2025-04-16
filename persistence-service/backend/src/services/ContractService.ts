@@ -9,7 +9,7 @@ export class ContractService {
   private movieRepository = AppDataSource.getRepository(Movie);
 
   async assignContract(personId: number, movieId: number, salary: number): Promise<Contract> {
-    const person = await this.personRepository.findOne({ where: { person_id: personId } });
+    const person = await this.personRepository.findOne({ where: { union_id: personId } });
     const movie = await this.movieRepository.findOne({ where: { movie_id: movieId } });
 
     if (!person || !movie) throw new Error("Person or Movie not found");
