@@ -1,124 +1,169 @@
-# Project: persistence-service
+# 🎬 Movie Production Company Management System
 
-## Goal
+This is a full-stack backend API built with **Node.js**, **TypeScript**, **Express**, and **TypeORM** for managing the operations of a movie production company. It provides endpoints to handle Movies, Persons, Contracts, Assignments, Awards, and more.
 
-This project is here to demonstrate various topics covered in SENG8070. There
-are many branches in this project and each of them will cover a different topic.
+---
 
-## Getting started
+## 📁 Project Structure
 
-### Requirements
-
-You will need NPM and Node installed on your local machine. It is highly
-recommended that you use a environment manager. The environment manager will
-prevent pollution of your local system.
-
-#### Quickest Way
-
-This can take some time to setup and understand how to use. For the quickest
-start, navigate to the [Download Page of Nodejs](https://nodejs.org/en/download/),
-download the correct package for your system, and install.
-
-#### Industry Standard Way
-
-##### Linux/macOs
-
-I highly recommend [NVM](https://github.com/nvm-sh/nvm).
-Read about the details on the NVM project page.
-
-###### Windows
-
-Setting up development for Windows is a little bit more complicated. There are
-three (3) pieces of technology you will most likely need:
-
-1. terminal
-2. SSH
-3. git
-
-For the terminal, I would recommend zsh or bash. Here is a tutorial on [setting
-up zsh on your Windows Machine](https://dev.to/zinox9/installing-zsh-on-windows-37em).
-
-On top of that, you will likely need to setup [SSH](https://docs.microsoft.com/en-us/windows/terminal/tutorials/ssh)
-and [git](https://git-scm.com/download/win). Please consult the documentation
-I've linked above to set those pieces of technology up.
-
-After that, the Environment Manager I recommend for Windows is [nvm-windows](https://github.com/coreybutler/nvm-windows).
-
-### Starting Development
-
-Validate that you have Node and NPM:
-
-```bash
-node -v
+```
+├── config/                  # Database configuration (TypeORM)
+│   └── configure.ts
+├── entities/                # TypeORM entities (tables)
+│   ├── Assignment.ts
+│   ├── Award.ts
+│   ├── Contact.ts
+│   ├── Contract.ts
+│   ├── Movie.ts
+│   ├── MovieAward.ts
+│   ├── Nationality.ts
+│   ├── Person.ts
+│   ├── PersonAward.ts
+│   └── Role.ts
+├── services/                # Business logic layer
+│   └── *.ts (e.g., MovieService.ts)
+├── controllers/            # Express controllers (API endpoints)
+│   └── *.ts (e.g., movieAPIController.ts)
+├── tests/                  # Unit and integration tests
+│   └── *.test.ts
+├── server.ts               # Entry point
+└── README.md
 ```
 
+---
+
+## 🛠️ Technologies Used
+
+- Node.js
+- TypeScript
+- Express.js
+- TypeORM
+- PostgreSQL
+- Jest
+- Supertest / Axios (for integration testing)
+- Dotenv
+
+---
+
+## 🔌 Installation
+
+1. **Clone the repository:**
+
 ```bash
-npm -v
+git clone https://github.com/your-username/movie-production-system.git
+cd movie-production-system
 ```
 
-If you have them installed, you will be given the version number.
-
-Install the required dependencies:
+2. **Install dependencies:**
 
 ```bash
 npm install
 ```
 
-Start the development environment:
+3. **Create `.env` file:**
 
-```bash
-npm start
+```env
+DB_HOST=localhost
+DB_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=yourpassword
+POSTGRES_DB=movie_production_db
 ```
 
-### Tests
+4. **Run the application:**
 
-Run tests with:
+```bash
+npm run dev
+```
+
+The app will run on `http://localhost:8000`.
+
+---
+
+## 🧩 API Endpoints
+
+| Entity     | Base Route          | Description                  |
+|------------|---------------------|------------------------------|
+| Person     | `/api/persons`      | CRUD operations for people   |
+| Movie      | `/api/movies`       | Manage movies                |
+| Contract   | `/api/contracts`    | Person-movie contract info   |
+| Assignment | `/api/assignments`  | Contract + role assignments  |
+| Award      | `/api/awards`       | Award registry               |
+
+---
+
+## 🧪 Testing
+
+### ▶ Unit Tests
+
+- Located in `/tests/*.test.ts`
+- Mocked services using `jest.fn()`
 
 ```bash
 npm run test
 ```
 
-#### Docker & docker-compose
+### ▶ Integration Tests
+
+- Full CRUD using `axios` and real API endpoints
+- Each controller has a separate test file
+
+Run integration tests (requires DB running):
+
+```bash
+npm run test:integration
+```
 
 ---
 
-The [official website](https://docs.docker.com/get-docker/) contains instructions
-for all operating systems.
+## 📦 Sample Payloads
 
-in most cases, compose (docker-compose) comes with the Docker installation.
-However, if you're looking for a different version or troubleshooting tips, you
-can head to the [official documentation for compose](https://docs.docker.com/compose/install/).
-
-### Starting Development
-
-Validate that you have Node and NPM:
-
-```bash
-node -v
+### Create Person
+```json
+{
+  "name": "John Smith",
+  "dob": "1980-01-01",
+  "nationalityId": 1
+}
 ```
 
-```bash
-npm -v
+### Create Movie
+```json
+{
+  "title": "The Grand Finale",
+  "releaseDate": "2025-01-01"
+}
 ```
 
-### Using docker compose
+---
 
-These commands are to be ran in the docker compose directory.
+## 🧼 Scripts
 
-#### Build the Image
+| Command           | Description                |
+|------------------|----------------------------|
+| `npm run dev`     | Start the development server |
+| `npm run test`    | Run all Jest unit tests    |
+| `npm run build`   | Compile TypeScript         |
 
-```bash
-docker-compose build
-```
+---
 
-#### Run the image
+## 🏗️ To-Do
 
-```bash
-docker-compose up -d
-```
+- Add Swagger API docs
+- Implement authentication
+- Role-based access control
+- Pagination & filtering
 
-#### Build and Run the image
+---
 
-```bash
-docker-compose up -d --build
-```
+## 👨‍💻 Author
+
+Gautam Shrivastav  
+📫 gshrivastav94@gmail.com  
+🏠 Waterloo, Ontario, Canada
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License.
